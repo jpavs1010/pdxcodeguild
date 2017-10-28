@@ -1,0 +1,95 @@
+<h1>Dictionary AJAX</h1>
+<hr/>
+<div id="dictionary_entry">
+    <input id="word_input" type="text" placeholder="word"/>
+    <input id="definition_input" type="text" placeholder="definition"/>
+    <input id="synonym_input" type="text" placeholder="synonym"/>
+    <button id="word_input_button">Submit</button>
+</div>
+
+<div id="all_words">
+    <ul id="dictionary_words"></ul>
+</div>
+
+<div id="detail">
+    <h1 id="word">{{word.word}}</h1>
+    <p id="definition">{{word.definition}}</p>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
+
+<script>
+    function http_get(url, success) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                var data = JSON.parse(xhttp.responseText);
+                success(data);
+            }
+        };
+        xhttp.open("GET", url);
+        xhttp.send();
+    }
+
+    function http_post(url, data, success) {
+        var csrf_token = Cookies.get('csrftoken');
+        console.log(csrf_token);
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                success(xhttp.responseText);
+            }
+        };
+        xhttp.open("POST", url);
+        xhttp.setRequestHeader("Content-Type", "application/json");
+        xhttp.setRequestHeader('X-CSRFToken', csrf_token);
+        xhttp.send(JSON.stringify(data));
+    }
+
+
+    var word_input = document.getElementById('word_input');
+    var definition_input = document.getElementById('definition_input');
+    var synonym_input = document.getElementById('synonym_input');
+    var words_button = document.getElementById('word_input_button');
+    words_button.onclick = function () {
+        http_post("{% url 'dictionaryajax:postwords' %}", data, function (response) {
+            console.log(response);
+            refresh();
+        });
+    };
+
+    word_data = null;
+
+    function refresh() {
+        http_get("{% url 'dictionaryajax:getwords' %}", function(data) {
+            word_data = data;
+            console.log(data);
+            var words = document.getElementById('dictionary_words');
+            while (words.hasChildNodes()){
+                words.removeChild(words.lastChild);
+            }
+
+            for (var i=0; i<data.words.length; ++i) {
+                var li = document.createElement('li');
+                var a = document.createElement('a');
+                a.innerHTML = data.words[i].word;
+                a.data = data.words[i];
+                a.href = '#';
+                a.onclick = function() {
+                    console.log(this.data);
+                    // change the DOM to show this
+                    function show_definition() {
+                        div_dictionary_entry.style.display = 'block';
+                        all_words.style.display = 'block';
+                        detail.style.display = 'show';
+                        //need to complete this portion
+                    }
+                };
+                li.appendChild(a);
+                words.appendChild(li);
+            }
+        });
+    }
+    refresh();
+</script>
