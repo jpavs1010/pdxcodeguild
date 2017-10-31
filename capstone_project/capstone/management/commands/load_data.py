@@ -12,7 +12,7 @@ def erase_database():
 def open_data():
     # file = pd.read_excel(open('food environment atlas.xls', 'rb'), sheetname = 'ACCESS')
     # df = load_file.parse()
-    xl = pd.ExcelFile(r'C:\Users\Jessica\PycharmProjects\20170724-FullStack-Night\Code\jessica\capstone_project\capstone\management\commands\food_environment_atlas.xls')
+    xl = pd.ExcelFile(r'C:\Users\Jessica\PycharmProjects\20170724-FullStack-Night\Code\jessica\capstone_project\capstone\management\commands\food_environment_atlas.xls', dtype={"FIPS": str})
     #print(xl.sheet_names)
 
     sheet = xl.parse('ACCESS')
@@ -35,6 +35,7 @@ def open_data():
         all_data = AccessData(state=state, county=county, pct_access=pct_access, county_id=county_id)
         all_data.save()
 
+        print(f'{((i/len(data_column))*100)}%')
 
 class Command(BaseCommand):
 

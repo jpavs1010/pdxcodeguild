@@ -4,13 +4,12 @@
 <div id="map"></div>
 
 
+<svg width="960" height="600"></svg>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script> <!--from d3 website-->
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script> script used in tutorial-->
 <script src="https://d3js.org/topojson.v1.min.js"></script>
 <!--<script src="../../visualization.js"></script> tutorial uses separate document-->
-
-<svg width="960" height="600"></svg>
 
 <script>
     function http_get(url, success) {
@@ -25,13 +24,12 @@
         xhttp.send();
     }
 
-    function refresh() {
-        http_get("{% url 'capstone:getdata' %}", function(data) {
-            console.log(data)
-        })
-    }
-
-    refresh();
+//    function refresh() {
+//        http_get("{% url 'capstone:getdata' %}", function(data) {
+//            console.log(data)
+//        })
+//    }
+//    refresh();
 
     var svg = d3.select("svg"),
         width = +svg.attr("width"),
@@ -49,6 +47,7 @@
     // ADD COLOR SCALE TO THE KEY
     var color = d3.scaleThreshold()
         .domain(d3.range(2, 10))
+        //.domain(d3.range(2, 88))
         //.domain([0.02, 0.04, 0.06, 0.08, 0.10])
         //.range(["#f2f0f7", "#dadaeb", "#bcbddc", "#9e9ac8", "#756bb1", "#54278f"]);
         .range(['#f7fbff','#deebf7','#c6dbef','#9ecae1','#6baed6','#4292c6','#2171b5','#08519c','#08306b']);
@@ -66,7 +65,7 @@
         }))
       .enter().append("rect")
         .attr("height", 8)
-        .attr("x", function(d) { console.log(x(d[0])); return x(d[0]); })
+        .attr("x", function(d) { return x(d[0]); })
         .attr("width", function(d) { return x(d[1]) - x(d[0]); })
         .attr("fill", function(d) { return color(d[0]); });
 
@@ -91,28 +90,43 @@
     //ADD JSON FILES FOR MAP AND DATA
     d3.queue()
         .defer(d3.json, "https://d3js.org/us-10m.v1.json")
-        .defer(d3.json, "{% url 'capstone:getdata' %}", function(d) { access.set(d.county_id, +d.pct_access); })
+        .defer(d3.json, "{% url 'capstone:getdata' %}")
         .await(ready);
 
+
     // DRAWS THE MAP
-    function ready(error, us) {
-      if (error) throw error;
+    function ready(error, us, data) {
+        if (error) throw error;
 
-      svg.append("g")
-          .attr("class", "counties")
-        .selectAll("path")
-        .data(topojson.feature(us, us.objects.counties).features)
-        .enter().append("path")
-          .attr("fill", function(d) { return color(d.pct_access = access.get(d.county_id)); })
-          .attr("d", path)
-        .append("title")
-          .text(function(d) { return d.pct_access + "%"; });
 
-      // DRAWS STATE LINES
-      svg.append("path")
-          .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
-          .attr("class", "states")
-          .attr("d", path);
+
+        //var data = "{% url 'capstone:getdata' %}";
+        data = data.all_data;
+        for (var i=0; i<data.length; i++) {
+            access.set(data[i].county_id, +data[i].pct_access);
+        }
+
+        svg.append("g")
+            .attr("class", "counties")
+            .selectAll("path")
+            .data(topojson.feature(us, us.objects.counties).features)
+            .enter().append("path")
+            .attr("fill", function(d) {
+                //console.log(d);
+                //d.pct_access = access.get(d.id);
+                return color(access.get(d.id));
+            })
+            .attr("d", path)
+            .append("title")
+            .text(function(d) {
+                return d.pct_access + "%";
+            });
+
+        // DRAWS STATE LINES
+        svg.append("path")
+            .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+            .attr("class", "states")
+            .attr("d", path);
     }
 
 
