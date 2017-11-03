@@ -12,14 +12,15 @@ def erase_database():
 def open_data():
     # file = pd.read_excel(open('food environment atlas.xls', 'rb'), sheetname = 'ACCESS')
     # df = load_file.parse()
-    xl = pd.ExcelFile(r'C:\Users\Jessica\PycharmProjects\20170724-FullStack-Night\Code\jessica\capstone_project\capstone\management\commands\food_environment_atlas.xls', dtype={"FIPS": str})
+    #xl = pd.ExcelFile(r'C:\Users\Jessica\PycharmProjects\pdxcodeguild\capstone_project\capstone\management\commands\food_environment_atlas.xls', sheetname='ACCESS', converters={'FIPS':str})
     #print(xl.sheet_names)
+    df = pd.read_excel(r'C:\Users\Jessica\PycharmProjects\pdxcodeguild\capstone_project\capstone\management\commands\food_environment_atlas.xls',sheetname='ACCESS', converters={'FIPS': str})
 
-    sheet = xl.parse('ACCESS')
-    data_column = sheet['PCT_LACCESS_POP10']
-    state_column = sheet['State']
-    county_column = sheet['County']
-    county_id_column = sheet['FIPS']
+    #sheet = xl.parse('ACCESS')
+    data_column = df['PCT_LACCESS_POP10']
+    state_column = df['State']
+    county_column = df['County']
+    county_id_column = df['FIPS']
     #print(type(data_column))
     #print(len(data_column))
     #print(data_column[0])
