@@ -10,30 +10,34 @@ def erase_database():
 
 # open xls (pick out relevant data)
 def open_data():
-    # file = pd.read_excel(open('food environment atlas.xls', 'rb'), sheetname = 'ACCESS')
-    # df = load_file.parse()
-    #xl = pd.ExcelFile(r'C:\Users\Jessica\PycharmProjects\pdxcodeguild\capstone_project\capstone\management\commands\food_environment_atlas.xls', sheetname='ACCESS', converters={'FIPS':str})
-    #print(xl.sheet_names)
-    df = pd.read_excel(r'C:\Users\Jessica\PycharmProjects\pdxcodeguild\capstone_project\capstone\management\commands\food_environment_atlas.xls',sheetname='ACCESS', converters={'FIPS': str})
+    file = r'C:\Users\Jessica\PycharmProjects\pdxcodeguild\capstone_project\capstone\management\commands\food_environment_atlas.xls'
+    # worksheets = ['ACCESS', 'HEALTH']
+    # df = pd.read_excel(file, sheetname=worksheets, converters={'FIPS': str})
+    # access_worksheet = df['ACCESS']
+    # health_worksheet = df['HEALTH']
 
-    #sheet = xl.parse('ACCESS')
-    data_column = df['PCT_LACCESS_POP10']
-    state_column = df['State']
-    county_column = df['County']
-    county_id_column = df['FIPS']
-    #print(type(data_column))
-    #print(len(data_column))
-    #print(data_column[0])
-    #for datum in sheet['PCT_LACCESS_POP10']:
-    #    print(datum)
+    df1 = pd.read_excel(file, sheetname='ACCESS', converters={'FIPS': str})
+    df2 = pd.read_excel(file, sheetname='HEALTH', converters={'FIPS': str}, usecols=[0, 4, 6])
+
+    df_join = pd.merge(df1, df2, on='FIPS', how='inner')
+
+    data_column = df_join['PCT_LACCESS_POP10']
+    state_column = df_join['State']
+    county_column = df_join['County']
+    county_id_column = df_join['FIPS']
+    diabetes_column = df_join['PCT_DIABETES_ADULTS13']
+    obese_column = df_join['PCT_OBESE_ADULTS13']
 
     for i in range(len(data_column)):
         pct_access = data_column[i]
         state = state_column[i]
         county = county_column[i]
         county_id = county_id_column[i]
+        pct_diabetes = diabetes_column[i]
+        pct_obese = obese_column[i]
 
-        all_data = AccessData(state=state, county=county, pct_access=pct_access, county_id=county_id)
+        all_data = AccessData(state=state, county=county, pct_access=pct_access, county_id=county_id,
+                              pct_diabetes=pct_diabetes, pct_obese=pct_obese)
         all_data.save()
 
         print(f'{((i/len(data_column))*100)}%')
