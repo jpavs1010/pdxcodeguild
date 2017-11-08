@@ -31,6 +31,17 @@ class AccessData(models.Model):
         return self.county+','+' '+self.state
 
 
+class MapData(models.Model):
+    variable = models.CharField(max_length=20)
+    header_text = models.CharField(max_length=200)
+    legend_text = models.CharField(max_length=200)
+    lower_bound = models.CharField(max_length=20)
+    upper_bound = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.variable
+
+
 # class Statistics(models.Model):
 #     description = models.CharField(max_length=200)
 #     correlation = models.CharField(max_length=5)
