@@ -5,6 +5,5 @@ app_name = 'capstone'
 urlpatterns = [
     url(r'^$', views.index2, name='index'),
     url(r'^getdata/', views.getdata, name='getdata'),
-    url(r'^getmetadata/', views.getmetadata, name='getmetadata'),
-    url(r'^diabetesmap/', views.diabetesmap, name='diabetesmap')
+    url(r'^getmetadata/', views.getmetadata, name='getmetadata')
 ]

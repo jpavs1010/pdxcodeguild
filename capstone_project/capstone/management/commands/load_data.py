@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from capstone.models import AccessData
+
 import pandas as pd
 
 
@@ -8,11 +9,12 @@ def erase_database():
     AccessData.objects.all().delete()
 
 
+
 # open xls (pick out relevant data)
 def open_data():
     file = r'C:\Users\Jessica\PycharmProjects\pdxcodeguild\capstone_project\capstone\management\commands\food_environment_atlas.xls'
     df1 = pd.read_excel(file, sheetname='ACCESS', converters={'FIPS': str}, usecols=[0, 1, 2, 6, 7])
-    df2 = pd.read_excel(file, sheetname='STORES', converters={'FIPS': str}, usecols=[0, 6, 7, 9, 10, 15, 16])
+    df2 = pd.read_excel(file, sheetname='STORES', converters={'FIPS': str}, usecols=[0, 6, 7, 12, 13, 18, 19])
     df3 = pd.read_excel(file, sheetname='HEALTH', converters={'FIPS': str}, usecols=[0, 3, 4, 5, 6])
     df4 = pd.read_excel(file, sheetname='SOCIOECONOMIC', converters={'FIPS': str}, usecols=[0, 3, 4, 5, 6, 7, 8])
 
@@ -32,17 +34,16 @@ def open_data():
     obese_column13 = df_join3['PCT_OBESE_ADULTS13']  # Estimates age-adjusted percentage persons age 20+ obese 2013
     grocery_column09 = df_join3['GROCPTH09']  # number of grocery stores in county per 1,000 county residents 2009
     grocery_column14 = df_join3['GROCPTH14']  # number of grocery stores in county per 1,000 county residents 2014
-    supercenter_column09 = df_join3['SUPERC09']  # number of supercenters in county per 1,000 county residents 2009
-    supercenter_column14 = df_join3['SUPERC14']  # number of supercenters in county per 1,000 county residents 2014
-    convenience_column09 = df_join3['CONVS09']  # number of convenience stores in county per 1,000 county residents 2009
-    convenience_column14 = df_join3['CONVS14']  # number of convenience stores in county per 1,000 county residents 2014
+    supercenter_column09 = df_join3['SUPERCPTH09']  # number of supercenters in county per 1,000 county residents 2009
+    supercenter_column14 = df_join3['SUPERCPTH14']  # number of supercenters in county per 1,000 county residents 2014
+    convenience_column09 = df_join3['CONVSPTH09']  # number of convenience stores in county per 1,000 county residents 2009
+    convenience_column14 = df_join3['CONVSPTH14']  # number of convenience stores in county per 1,000 county residents 2014
     white_column = df_join3['PCT_NHWHITE10']  # % white population 2010
     black_column = df_join3['PCT_NHBLACK10']  # % black population 2010
     hispanic_column = df_join3['PCT_HISP10']  # % hispanic population 2010
     asian_column = df_join3['PCT_NHASIAN10']  # % asian population 2010
     amerindian_column = df_join3['PCT_NHNA10']  # % american indiana population 2010
     hawaiian_column = df_join3['PCT_NHPI10']  # % hawaiian population 2010
-
 
     for i in range(len(access_column10)):
         county_id = county_id_column[i]

@@ -1,6 +1,6 @@
 {% load static %}
 
-<h1>Percent of Population with Low Access to Grocery Stores by County</h1>
+<h1>Percent of Low-Income Population with Low Access to Grocery Stores by County</h1>
 <div id="map"></div>
 
 
@@ -57,8 +57,6 @@
             .attr("class", "key")
             .attr("transform", "translate(600,40)");
 
-
-
         var legend = svg.append("defs")
             .append("svg:linearGradient")
             .attr("id", "gradient")
@@ -97,10 +95,7 @@
             .tickValues(d3.range(2, 10)))
             .select(".domain")
             .remove();
-
-
     }
-
 
     var svg = d3.select("svg"),
         width = +svg.attr("width"),
@@ -109,7 +104,6 @@
     var access = d3.map();
 
     var path = d3.geoPath();
-
 
     // ADD COLOR SCALE
     var color = d3.scaleLinear()

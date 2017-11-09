@@ -61,25 +61,17 @@ def getdata(request):
             data_row['data_value'] = data.hawaiian_2010
 
         json_data_set.append(data_row)
-    return JsonResponse({'data_row': json_data_set})
+    return JsonResponse({'all_data': json_data_set})
 
 
 def getmetadata(request):
-    data_set = MapData.objects.all()
-    json_data_set = {}
-    for data in data_set:
-        data_row = {}
-        data_row['variable'] = data.variable
-        data_row['header_text'] = data.header_text
-        data_row['legend_text'] = data.legend_text
-        data_row['lower_bound'] = data.lower_bound
-        data_row['upper_bound'] = data.upper_bound
-
-        json_data_set.append(data_row)
-
     graph_name = request.GET.get('graph_name')
     map_data = MapData.objects.get(variable=graph_name)
-    return JsonResponse({'data_row': json_data_set})
+    d = {'variable': map_data.variable,
+         'header_text': map_data.header_text,
+         'legend_text': map_data.legend_text,
+         'upper_bound': map_data.upper_bound,
+         'lower_bound': map_data.lower_bound}
+    return JsonResponse(d)
 
-def diabetesmap(request):
-    return render(request, 'capstone/diabetesmap.html', {})
+
