@@ -1,0 +1,98 @@
+<body>
+    <h1>Correlations</h1>
+    <!--finish: automatically generate drop down list using variable from MapData-->
+    <select id="variable1">
+        <option value="Access 2010">Access 2010</option>
+        <option value="Access 2015">Access 2015</option>
+        <option value="Diabetes 2008">Diabetes 2008</option>
+        <option value="Diabetes 2013">Diabetes 2013</option>
+        <option value="Obese 2008">Obese 2008</option>
+        <option value="Obese 2013">Obese 2013</option>
+        <option value="Grocery 2009">Grocery 2009</option>
+        <option value="Grocery 2014">Grocery 2014</option>
+        <option value="Supercenter 2009">Supercenter 2009</option>
+        <option value="Supercenter 2014">Supercenter 2014</option>
+        <option value="Convenience 2009">Convenience 2009</option>
+        <option value="Convenience 2014">Convenience 2014</option>
+        <option value="White 2010">Caucasian 2010</option>
+        <option value="Black 2010">African American 2010</option>
+        <option value="Hispanic 2010">Hispanic 2010</option>
+        <option value="Asian 2010">Asian 2010</option>
+        <option value="American Indian 2010">Native American 2010</option>
+        <option value="Hawaiian 2010">Hawaiian 2010</option>
+    </select>
+    <select id="variable2">
+        <option value="Access 2010">Access 2010</option>
+        <option value="Access 2015">Access 2015</option>
+        <option value="Diabetes 2008">Diabetes 2008</option>
+        <option value="Diabetes 2013">Diabetes 2013</option>
+        <option value="Obese 2008">Obese 2008</option>
+        <option value="Obese 2013">Obese 2013</option>
+        <option value="Grocery 2009">Grocery 2009</option>
+        <option value="Grocery 2014">Grocery 2014</option>
+        <option value="Supercenter 2009">Supercenter 2009</option>
+        <option value="Supercenter 2014">Supercenter 2014</option>
+        <option value="Convenience 2009">Convenience 2009</option>
+        <option value="Convenience 2014">Convenience 2014</option>
+        <option value="White 2010">Caucasian 2010</option>
+        <option value="Black 2010">African American 2010</option>
+        <option value="Hispanic 2010">Hispanic 2010</option>
+        <option value="Asian 2010">Asian 2010</option>
+        <option value="American Indian 2010">Native American 2010</option>
+        <option value="Hawaiian 2010">Hawaiian 2010</option>
+    </select>
+    <button id="correlate">Correlate</button>
+</body>
+
+<style></style>
+
+<script>
+
+//    var mydiv = document.getElementById("mydiv");
+//    var options = "{% url 'capstone:metagetdata' %}?variable_name="+variable_name);
+//
+//    var variable1 = document.createElement("select");
+//    variable1.id = "variable1";
+//    variable1.appendChild(variable1);
+//
+//    var variable2 = document.createElement("select");
+//    variable2.id = "variable2";
+//    variable2.appendChild(variable2);
+
+
+    for (var i = 0; i < array.length; i++) {
+        var option = document.createElement("option");
+        option.value = array[i];
+        option.text = array[i];
+        selectList.appendChild(option);
+}
+
+
+    function http_get(url, success) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                var data = JSON.parse(xhttp.responseText);
+                success(data);
+            }
+        };
+        xhttp.open("GET", url);
+        xhttp.send();
+    }
+
+
+    var variable1 = document.getElementById('variable1');
+    var variable2 = document.getElementById('variable2');
+    var correlate = document.getElementById('correlate');
+    correlate.onclick = function() {
+        var v1 = variable1.options[variable1.selectedIndex].value;
+        var v2 = variable2.options[variable2.selectedIndex].value;
+        http_get("{% url 'capstone:correlation' %}", function(data) {
+            console.log(data);
+        });
+    };
+
+
+
+</script>
+

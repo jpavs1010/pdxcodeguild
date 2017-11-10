@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from .models import AccessData
 from .models import MapData
 
+import pandas as pd
+
 
 # Create your views here.
 
@@ -43,7 +45,7 @@ def getdata(request):
             data_row['data_value'] = data.supercenter_2009
         elif user_choice == 'Supercenter 2014':
             data_row['data_value'] = data.supercenter_2014
-        elif user_choice == 'Convenience 2014':
+        elif user_choice == 'Convenience 2009':
             data_row['data_value'] = data.convenience_2009
         elif user_choice == 'Convenience 2014':
             data_row['data_value'] = data.convenience_2014
@@ -73,5 +75,23 @@ def getmetadata(request):
          'upper_bound': map_data.upper_bound,
          'lower_bound': map_data.lower_bound}
     return JsonResponse(d)
+
+
+def correlation(request):
+    user_choice1 = request.GET.get('var1')
+    user_choice2 = request.GET.get('var2')
+
+
+
+    d = AccessData.objects.all()
+    df = pd.DataFrame(data=d)
+    df_corr = pd.DataFrame(df)
+
+    x = df_corr[''].corr(df_corr[''], method='spearman')
+
+    # check if variable selected
+
+
+    return render(request, 'capstone/correlation.html', {})
 
 
