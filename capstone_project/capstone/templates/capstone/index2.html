@@ -1,11 +1,11 @@
 {% load static %}
 
 <h1 id="page_title"></h1>
-<div id="map"></div>
+
 <select id="ddl_graph">
     <option value="Access 2010">Access 2010</option>
     <option value="Access 2015">Access 2015</option>
-    <option value="Diabetes 2010">Diabetes 2010</option>
+    <option value="Diabetes 2008">Diabetes 2008</option>
     <option value="Diabetes 2013">Diabetes 2013</option>
     <option value="Obese 2008">Obese 2008</option>
     <option value="Obese 2013">Obese 2013</option>
@@ -23,6 +23,7 @@
     <option value="Hawaiian 2010">Hawaiian 2010</option>
 </select>
 <button id="bt_show_graph">show</button>
+<div id="map"></div>
 
 
 <svg width="960" height="600"></svg>
@@ -34,6 +35,11 @@
         fill: none;
         stroke: #000;
         stroke-linejoin: round;
+    }
+    .counties path:hover {
+        opacity: 0.75;
+        fill: #ffb366;
+        stroke: #000
     }
 </style>
 
@@ -127,7 +133,7 @@
                 .attr("stop-opacity", 1);
             legend.append("stop")
                 .attr("offset", "100%")
-                .attr("stop-color", '#004080')
+                .attr("stop-color", '#0000ff')
                 .attr("stop-opacity", 1);
             var y = d3.scaleLinear().range([300, 0]).domain([1, 100]);
     //        var yAxis = d3.axisLeft().scale(y).orient("right");
@@ -148,6 +154,12 @@
             g.call(d3.axisBottom(x)
                 .tickSize(20)
                 .tickFormat(function (d) {
+                    if (upper_bound < 0.3){
+                        return (((upper_bound - lower_bound) / 10) * d).toFixed(2) + "%";
+                    }
+                    else if (upper_bound < 6) {
+                        return (((upper_bound - lower_bound) / 10) * d).toFixed(1) + "%";
+                    }
                     return (((upper_bound - lower_bound) / 10) * d).toFixed(0) + "%";
                 })
                 .tickValues(d3.range(2, 10)))
@@ -175,15 +187,15 @@
                     //.domain([0.02, 0.04, 0.06, 0.08, 0.10])
                     //.range(["#f2f0f7", "#dadaeb", "#bcbddc", "#9e9ac8", "#756bb1", "#54278f"]);
                     //.range(['#f7fbff','#deebf7','#c6dbef','#9ecae1','#6baed6','#4292c6','#2171b5','#08519c','#08306b']);
-                    .range(['#cce6ff', '#004080']);
+                    .range(['#cce6ff', '#0000ff']);
 
                 draw_key(svg);
 
-            console.log(metadata);
+            //console.log(metadata);
 
             data = data.all_data;
             for (var i = 0; i < data.length; i++) {
-                access.set(data[i].county_id, +data[i].data_value);
+                access.set(data[i].county_id,{data_value: +data[i].data_value, county: data[i].county, state: data[i].state});
             }
 
             svg.append("g")
@@ -193,19 +205,21 @@
                 .enter().append("path")
                 .attr("fill", function (d) {
                     //console.log(d);
-                    d.data_value = access.get(d.id);
-                    if (typeof d.data_value == 'undefined') {
+
+                    d.data = access.get(d.id);
+                    if (typeof d.data == 'undefined') {
                         return '#000000'
                     }
-                    return color(d.data_value);
+                    return color(d.data.data_value);
 
 
                 })
                 .attr("d", path)
                 .append("title")
                 .text(function (d) {
-                    if (typeof d.data_value != 'undefined') {
-                        return d.data_value.toFixed(2) + "%" + ' ' + d.county + ',' + d.state;
+                    console.log(d);
+                    if (typeof d.data != 'undefined') {
+                        return d.data.data_value.toFixed(2) + "%" + ' ' + d.data.county + ',' + ' ' + d.data.state;
                     } else {
                         return 'No Data';
                     }
