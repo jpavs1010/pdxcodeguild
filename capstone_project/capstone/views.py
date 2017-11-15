@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db import connection
 from django.http import JsonResponse
 from .models import AccessData
 from .models import MapData
@@ -6,17 +7,55 @@ from .models import MapData
 import pandas as pd
 
 
-# Create your views here.
-
-
 def index2(request):
-    return render(request, 'capstone/index2.html', {})
+    mapdata = MapData.objects.all()
+    context = {'mapdata': mapdata}
+    return render(request, 'capstone/index2.html', context)
+
+
+def get_attribute(variable_name, data_row):
+    if variable_name == 'Access 2010':
+        return data_row.pct_access_2010
+    elif variable_name == 'Access 2015':
+        return data_row.pct_access_2015
+    elif variable_name == 'Diabetes 2008':
+        return data_row.pct_diabetes_2008
+    elif variable_name == 'Diabetes 2013':
+        return data_row.pct_diabetes_2013
+    elif variable_name == 'Obese 2008':
+        return data_row.pct_obese_2008
+    elif variable_name == 'Obese 2013':
+        return data_row.pct_obese_2013
+    elif variable_name == 'Grocery 2009':
+        return data_row.grocery_2009
+    elif variable_name == 'Grocery 2014':
+        return data_row.grocery_2014
+    elif variable_name == 'Supercenter 2009':
+        return data_row.supercenter_2009
+    elif variable_name == 'Supercenter 2014':
+        return data_row.supercenter_2014
+    elif variable_name == 'Convenience 2009':
+        return data_row.convenience_2009
+    elif variable_name == 'Convenience 2014':
+        return data_row.convenience_2014
+    elif variable_name == 'White 2010':
+        return data_row.white_2010
+    elif variable_name == 'Black 2010':
+        return data_row.black_2010
+    elif variable_name == 'Hispanic 2010':
+        return data_row.hispanic_2010
+    elif variable_name == 'Asian 2010':
+        return data_row.asian_2010
+    elif variable_name == 'American Indian 2010':
+        return data_row.amerindian_2010
+    elif variable_name == 'Hawaiian 2010':
+        return data_row.hawaiian_2010
+    return None
 
 
 def getdata(request):
 
     user_choice = request.GET.get('graph_name')
-
 
     data_set = AccessData.objects.all()
     json_data_set = []
@@ -25,43 +64,7 @@ def getdata(request):
         data_row['county_id'] = data.county_id
         data_row['state'] = data.state
         data_row['county'] = data.county
-        if user_choice == 'Access 2010':
-            data_row['data_value'] = data.pct_access_2010
-        elif user_choice == 'Access 2015':
-            data_row['data_value'] = data.pct_access_2015
-        elif user_choice == 'Diabetes 2008':
-            data_row['data_value'] = data.pct_diabetes_2008
-        elif user_choice == 'Diabetes 2013':
-            data_row['data_value'] = data.pct_diabetes_2013
-        elif user_choice == 'Obese 2008':
-            data_row['data_value'] = data.pct_obese_2008
-        elif user_choice == 'Obese 2013':
-            data_row['data_value'] = data.pct_obese_2013
-        elif user_choice == 'Grocery 2009':
-            data_row['data_value'] = data.grocery_2009
-        elif user_choice == 'Grocery 2014':
-            data_row['data_value'] = data.grocery_2014
-        elif user_choice == 'Supercenter 2009':
-            data_row['data_value'] = data.supercenter_2009
-        elif user_choice == 'Supercenter 2014':
-            data_row['data_value'] = data.supercenter_2014
-        elif user_choice == 'Convenience 2009':
-            data_row['data_value'] = data.convenience_2009
-        elif user_choice == 'Convenience 2014':
-            data_row['data_value'] = data.convenience_2014
-        elif user_choice == 'White 2010':
-            data_row['data_value'] = data.white_2010
-        elif user_choice == 'Black 2010':
-            data_row['data_value'] = data.black_2010
-        elif user_choice == 'Hispanic 2010':
-            data_row['data_value'] = data.hispanic_2010
-        elif user_choice == 'Asian 2010':
-            data_row['data_value'] = data.asian_2010
-        elif user_choice == 'American Indian 2010':
-            data_row['data_value'] = data.amerindian_2010
-        elif user_choice == 'Hawaiian 2010':
-            data_row['data_value'] = data.hawaiian_2010
-
+        data_row['data_value'] = get_attribute(user_choice, data)
         json_data_set.append(data_row)
     return JsonResponse({'all_data': json_data_set})
 
@@ -76,22 +79,37 @@ def getmetadata(request):
          'lower_bound': map_data.lower_bound}
     return JsonResponse(d)
 
-
+import math
 def correlation(request):
-    user_choice1 = request.GET.get('var1')
-    user_choice2 = request.GET.get('var2')
+    mapdata = MapData.objects.all()
 
 
+    user_choice1 = request.GET.get('v1')
+    user_choice2 = request.GET.get('v2')
 
-    d = AccessData.objects.all()
-    df = pd.DataFrame(data=d)
-    df_corr = pd.DataFrame(df)
+    correlation = ''
 
-    x = df_corr[''].corr(df_corr[''], method='spearman')
+    if user_choice1 is not None and user_choice2 is not None:
+        data_column1 = []
+        data_column2 = []
+        for data_row in AccessData.objects.all():
+            datum1 = get_attribute(user_choice1, data_row)
+            datum2 = get_attribute(user_choice2, data_row)
+            if datum1 is not None and datum2 is not None:
+                data_column1.append(float(datum1))
+                data_column2.append(float(datum2))
 
-    # check if variable selected
+        df = pd.DataFrame({'datum1': data_column1, 'datum2':data_column2})
+        correlation = user_choice1+' x '+user_choice2+': '+str(df['datum1'].corr(df['datum2'], method='spearman'))
 
-
-    return render(request, 'capstone/correlation.html', {})
-
+    # query = str(AccessData.objects.all().query)
+    # d = pd.read_sql_query(query, connection)
+    # df = pd.DataFrame(d)
+    # df_corr = pd.DataFrame(df)
+    #
+    # for mapdata in mapdata:
+    #     if user_choice1 == {{mapdata.variable}} and user_choice2 == {{mapdata.variable}}:
+    #         df_corr['{{mapdata.variable}}'].corr(df_corr['{{mapdata.variable}}'], method='spearman')
+    context = {'mapdata': mapdata, 'correlation': correlation}
+    return render(request, 'capstone/correlation.html', context)
 
