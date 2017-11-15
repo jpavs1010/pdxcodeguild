@@ -3,30 +3,14 @@
 <h1 id="page_title"></h1>
 
 <select id="ddl_graph">
-    <option value="Access 2010">Access 2010</option>
-    <option value="Access 2015">Access 2015</option>
-    <option value="Diabetes 2008">Diabetes 2008</option>
-    <option value="Diabetes 2013">Diabetes 2013</option>
-    <option value="Obese 2008">Obese 2008</option>
-    <option value="Obese 2013">Obese 2013</option>
-    <option value="Grocery 2009">Grocery 2009</option>
-    <option value="Grocery 2014">Grocery 2014</option>
-    <option value="Supercenter 2009">Supercenter 2009</option>
-    <option value="Supercenter 2014">Supercenter 2014</option>
-    <option value="Convenience 2009">Convenience 2009</option>
-    <option value="Convenience 2014">Convenience 2014</option>
-    <option value="White 2010">Caucasian 2010</option>
-    <option value="Black 2010">African American 2010</option>
-    <option value="Hispanic 2010">Hispanic 2010</option>
-    <option value="Asian 2010">Asian 2010</option>
-    <option value="American Indian 2010">Native American 2010</option>
-    <option value="Hawaiian 2010">Hawaiian 2010</option>
+    {% for mapdatum in mapdata %}
+    <option value="{{mapdatum.variable}}">{{mapdatum.variable}}</option>
+    {% endfor %}
 </select>
 <button id="bt_show_graph">show</button>
 <div id="map"></div>
-
-
 <svg width="960" height="600"></svg>
+
 <style>
     .counties {
         fill: none;
@@ -42,34 +26,13 @@
         stroke: #000
     }
 </style>
-
-<!--<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>-->
 <script src="https://d3js.org/d3.v4.min.js"></script> <!--from d3 website-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script> <!--script used in tutorial-->
 <script src="https://d3js.org/topojson.v1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
-<!--<script src="../../visualization.js"></script> tutorial uses separate document-->
+
 
 <script>
-//    function Dropdownfunction() {
-//        document.getElementById("MyDropdown").classList.toggle("show");
-//    }
-//
-//    window.onclick = function (event) {
-//        if (!event.target.matches('.dropbtn')) {
-//
-//            var dropdowns = document.getElementsByClassName("dropdown-content");
-//            var i;
-//            for (i = 0; i < dropdowns.length; i++) {
-//                var openDropdown = dropdowns[i];
-//                if (openDropdown.classList.contains('show')) {
-//                    openDropdown.classList.remove('show');
-//                }
-//            }
-//        }
-//    };
-
-
     var bt_show_graph = document.getElementById('bt_show_graph');
     var ddl_graph = document.getElementById('ddl_graph');
     bt_show_graph.onclick = function() {

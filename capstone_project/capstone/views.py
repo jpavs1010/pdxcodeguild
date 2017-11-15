@@ -79,7 +79,7 @@ def getmetadata(request):
          'lower_bound': map_data.lower_bound}
     return JsonResponse(d)
 
-import math
+
 def correlation(request):
     mapdata = MapData.objects.all()
 
@@ -102,14 +102,6 @@ def correlation(request):
         df = pd.DataFrame({'datum1': data_column1, 'datum2':data_column2})
         correlation = user_choice1+' x '+user_choice2+': '+str(df['datum1'].corr(df['datum2'], method='spearman'))
 
-    # query = str(AccessData.objects.all().query)
-    # d = pd.read_sql_query(query, connection)
-    # df = pd.DataFrame(d)
-    # df_corr = pd.DataFrame(df)
-    #
-    # for mapdata in mapdata:
-    #     if user_choice1 == {{mapdata.variable}} and user_choice2 == {{mapdata.variable}}:
-    #         df_corr['{{mapdata.variable}}'].corr(df_corr['{{mapdata.variable}}'], method='spearman')
     context = {'mapdata': mapdata, 'correlation': correlation}
     return render(request, 'capstone/correlation.html', context)
 

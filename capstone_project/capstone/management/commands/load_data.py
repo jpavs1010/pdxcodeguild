@@ -82,31 +82,27 @@ def open_data():
 
 # def corr_data():
 #     file = r'C:\Users\Jessica\PycharmProjects\pdxcodeguild\capstone_project\capstone\management\commands\food_environment_atlas.xls'
-#     df1 = pd.read_excel(file, sheetname='ACCESS', converters={'FIPS': str}, usecols=[0, 1, 2, 6])
-#     df2 = pd.read_excel(file, sheetname='HEALTH', converters={'FIPS': str}, usecols=[0, 4, 6])
+#     df1 = pd.read_excel(file, sheetname='ACCESS', converters={'FIPS': str}, usecols=[0, 1, 2, 6, 7])
+#     df2 = pd.read_excel(file, sheetname='STORES', converters={'FIPS': str}, usecols=[0, 6, 7, 12, 13, 18, 19])
+#     df3 = pd.read_excel(file, sheetname='HEALTH', converters={'FIPS': str}, usecols=[0, 3, 4, 5, 6])
+#     df4 = pd.read_excel(file, sheetname='SOCIOECONOMIC', converters={'FIPS': str}, usecols=[0, 3, 4, 5, 6, 7, 8])
 #
-#     df_join = pd.merge(df1, df2, on='FIPS', how='inner')
+#     df_join1 = pd.merge(df1, df2, on='FIPS', how='inner')
+#     df_join2 = pd.merge(df_join1, df3, on='FIPS', how='inner')
+#     df_join3 = pd.merge(df_join2, df4, on='FIPS', how='inner')
 #
-#     # data_column = df_join['PCT_LACCESS_POP10']
-#     # state_column = df_join['State']
-#     # county_column = df_join['County']
-#     # county_id_column = df_join['FIPS']
-#     # diabetes_column = df_join['PCT_DIABETES_ADULTS13']
-#     # obese_column = df_join['PCT_OBESE_ADULTS13']
-#
-#     df_corr = pd.DataFrame(df_join, columns=['PCT_LACCESS_POP10', 'PCT_DIABETES_ADULTS13', 'PCT_OBESE_ADULTS13'])
+#     df_corr = pd.DataFrame(df_join3)
 #     x = df_corr['PCT_LACCESS_POP10'].corr(df_corr['PCT_DIABETES_ADULTS13'], method='spearman')
 #     y = df_corr['PCT_LACCESS_POP10'].corr(df_corr['PCT_OBESE_ADULTS13'], method='spearman')
 #
 #     print(x)
 #     print(y)
 
-    # add more columns to model, on map page drop down to select variable, and then another page select 2 variables and show correlation.
-    # find cool name for my capstone
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
         erase_database()
         open_data()
+        # corr_data()
 

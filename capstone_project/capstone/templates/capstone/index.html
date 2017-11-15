@@ -24,17 +24,7 @@
 <!--<script src="../../visualization.js"></script> tutorial uses separate document-->
 
 <script>
-    function http_get(url, success) {
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState === 4 && this.status === 200) {
-                var data = JSON.parse(xhttp.responseText);
-                success(data);
-            }
-        };
-        xhttp.open("GET", url);
-        xhttp.send();
-    }
+
 
     function draw_key(svg) {
 

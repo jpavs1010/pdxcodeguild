@@ -42,9 +42,10 @@ class MapData(models.Model):
         return self.variable
 
 
-# class Statistics(models.Model):
-#     description = models.CharField(max_length=200)
-#     correlation = models.CharField(max_length=5)
-#
-#     def __str__(self):
-#         return self.description
+class CorrelationData(models.Model):
+    variable1 = models.CharField(max_length=20)
+    variable2 = models.CharField(max_length=20)
+    correlation = models.FloatField(max_length=5)
+
+    def __str__(self):
+        return self.variable1+' '+self.variable2
