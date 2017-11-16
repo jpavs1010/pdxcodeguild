@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from django.db import connection
 from django.http import JsonResponse
-from .models import AccessData
-from .models import MapData
+from .models import AccessData, MapData, CorrelationData
 
 import pandas as pd
 
@@ -80,9 +79,77 @@ def getmetadata(request):
     return JsonResponse(d)
 
 
+def get_correlation(variable1, variable2):
+    correlation_data = CorrelationData.objects.get(variable1=variable1, variable2=variable2)
+    return correlation_data.correlation
+
+def find_t(min_value, max_value, value):
+    return (value - min_value) / (max_value - min_value)
+
+def interpolate(a, b, t):
+    return (1-t)*a + t*b
+
+def interpolate_colors(color_a, color_b, t):
+    return (interpolate(color_a[0], color_b[0], t),
+            interpolate(color_a[1], color_b[1], t),
+            interpolate(color_a[2], color_b[2], t))
+
+def render_color(c):
+    return f'rgb({int(c[0])},{int(c[1])},{int(c[2])})'
+
+def find_color(min_value, max_value, value):
+
+    green = (0, 255, 0)
+    blue = (0, 0, 255)
+    white = (255, 255, 255)
+
+    if value < 0:
+        t = find_t(min_value, 0, value)
+        return render_color(interpolate_colors(green, white, t))
+    else:
+        t = find_t(0, max_value, value)
+        return render_color(interpolate_colors(white, blue, t))
+
+def render_key():
+    d = '<div>'  # to do: add key, add view with scatterplot using d3
+    #d +=
+
+    d += '</div>'
+
+    return d
+def render_correlation_matrix():
+    mapdata = MapData.objects.all()
+    variables = [md.variable for md in mapdata]
+
+    correlations = [cd.correlation for cd in CorrelationData.objects.all()]
+    min_value = min(correlations)
+    max_value = max(correlations)
+
+
+
+
+    t = '<table>'
+
+    t += '<tr>'
+    t += '<th></th>'
+    for variable in variables:
+        t += '<th>'+variable+'</th>'
+    t += '</tr>'
+
+    for variable1 in variables:
+        t += '<tr><td>'+variable1+'</td>'
+        for variable2 in variables:
+            corr = get_correlation(variable1, variable2)
+            t += '<td style="background-color:'+find_color(min_value, max_value, corr)+';text-align:center">'
+            t += str(round(corr, 2))+'</td>'
+        t += '</tr>'
+
+    t += '</table>'
+    return t
+
+
 def correlation(request):
     mapdata = MapData.objects.all()
-
 
     user_choice1 = request.GET.get('v1')
     user_choice2 = request.GET.get('v2')
@@ -102,6 +169,10 @@ def correlation(request):
         df = pd.DataFrame({'datum1': data_column1, 'datum2':data_column2})
         correlation = user_choice1+' x '+user_choice2+': '+str(df['datum1'].corr(df['datum2'], method='spearman'))
 
-    context = {'mapdata': mapdata, 'correlation': correlation}
+    context = {'mapdata': mapdata, 'correlation': correlation, 'table': render_correlation_matrix()}
     return render(request, 'capstone/correlation.html', context)
+
+
+def scatterplot(request):
+    return render(request, 'capstone/scatterplot.html')
 

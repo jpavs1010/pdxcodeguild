@@ -12,26 +12,30 @@
     </select>
     <button id="correlate">Correlate</button>
     <div id="correlation">{{correlation}}</div>-->
-    <table>
-        <tr>
-            <td></td>
-            {% for mapdatum in mapdata%}
-            <td class="rotate">{{mapdatum.variable}}</td>
-            {% endfor %}
-        </tr>
-        {% for mapdatum in mapdata%}
-        <tr><td>{{mapdatum.variable}}</td></tr>
-        {% endfor %}
-    </table>
-
+    <!--<table>-->
+        <!--<tr>-->
+            <!--<td></td>-->
+            <!--{% for mapdatum in mapdata%}-->
+            <!--<td class="rotate">{{mapdatum.variable}}</td>-->
+            <!--{% endfor %}-->
+        <!--</tr>-->
+        <!--{% for mapdatum in mapdata%}-->
+        <!--<tr>-->
+            <!--<td>{{mapdatum.variable}}</td>-->
+            <!---->
+        <!--</tr>-->
+        <!--{% endfor %}-->
+    <!--</table>-->
+    {{ div | safe }}
+    {{ table | safe }}
 </body>
 
 <style>
-    td.rotate {
-        white-space: nowrap;
-        transform:
-            rotate(315deg);
-    }
+    /*td.rotate {*/
+        /*white-space: nowrap;*/
+        /*transform:*/
+            /*rotate(315deg);*/
+    /*}*/
 </style>
 
 <script>
