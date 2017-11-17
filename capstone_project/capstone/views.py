@@ -94,8 +94,10 @@ def interpolate_colors(color_a, color_b, t):
             interpolate(color_a[1], color_b[1], t),
             interpolate(color_a[2], color_b[2], t))
 
+
 def render_color(c):
     return f'rgb({int(c[0])},{int(c[1])},{int(c[2])})'
+
 
 def find_color(min_value, max_value, value):
 
@@ -110,6 +112,7 @@ def find_color(min_value, max_value, value):
         t = find_t(0, max_value, value)
         return render_color(interpolate_colors(white, blue, t))
 
+
 def render_key():
     d = '<div>'  # to do: add key, add view with scatterplot using d3
     #d +=
@@ -117,6 +120,8 @@ def render_key():
     d += '</div>'
 
     return d
+
+
 def render_correlation_matrix():
     mapdata = MapData.objects.all()
     variables = [md.variable for md in mapdata]
@@ -124,9 +129,6 @@ def render_correlation_matrix():
     correlations = [cd.correlation for cd in CorrelationData.objects.all()]
     min_value = min(correlations)
     max_value = max(correlations)
-
-
-
 
     t = '<table>'
 
@@ -173,6 +175,27 @@ def correlation(request):
     return render(request, 'capstone/correlation.html', context)
 
 
+def scatterplot_data(request):
+    user_choice1 = request.GET.get('v1')
+    user_choice2 = request.GET.get('v2')
+
+    data_set = AccessData.objects.all()
+    json_data_set = []
+    for data in data_set:
+        data_row = {}
+        data_row['county_id'] = data.county_id
+        data_row['state'] = data.state
+        data_row['county'] = data.county
+        data_row['choice1'] = get_attribute(user_choice1, data)
+        data_row['choice2'] = get_attribute(user_choice2, data)
+        json_data_set.append(data_row)
+
+    return JsonResponse({'all_data': json_data_set})
+
+
 def scatterplot(request):
-    return render(request, 'capstone/scatterplot.html')
+    mapdata = MapData.objects.all()
+    context = {'mapdata': mapdata}
+
+    return render(request, 'capstone/scatterplot.html', context)
 

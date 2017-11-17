@@ -7,5 +7,6 @@ urlpatterns = [
     url(r'^getdata/', views.getdata, name='getdata'),
     url(r'^getmetadata/', views.getmetadata, name='getmetadata'),
     url(r'^correlation/', views.correlation, name='correlation'),
-    url(r'^scatterplot/', views.scatterplot, name='scatterplot')
+    url(r'^scatterplot/', views.scatterplot, name='scatterplot'),
+    url(r'^scatterplotdata/', views.scatterplot_data, name='scatterplot_data')
 ]
