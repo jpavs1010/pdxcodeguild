@@ -83,11 +83,14 @@ def get_correlation(variable1, variable2):
     correlation_data = CorrelationData.objects.get(variable1=variable1, variable2=variable2)
     return correlation_data.correlation
 
+
 def find_t(min_value, max_value, value):
     return (value - min_value) / (max_value - min_value)
 
+
 def interpolate(a, b, t):
     return (1-t)*a + t*b
+
 
 def interpolate_colors(color_a, color_b, t):
     return (interpolate(color_a[0], color_b[0], t),
@@ -114,7 +117,8 @@ def find_color(min_value, max_value, value):
 
 
 def render_key():
-    d = '<div>'  # to do: add key, add view with scatterplot using d3
+    d = '<div>'  # to do: add key # canvas draw line # interpolate the color # draw vertical lines
+    # also update models to be floatfield instead of charfield # create a button to move from page to page
     #d +=
 
     d += '</div>'
@@ -188,9 +192,10 @@ def scatterplot_data(request):
         data_row['county'] = data.county
         data_row['choice1'] = get_attribute(user_choice1, data)
         data_row['choice2'] = get_attribute(user_choice2, data)
-        json_data_set.append(data_row)
+        if data_row['choice1'] is not None and data_row['choice2'] is not None and data_row['choice1'] != 'nan' and data_row['choice2'] != 'nan':
+            json_data_set.append(data_row)
 
-    return JsonResponse({'all_data': json_data_set})
+    return JsonResponse({'all_data': json_data_set[:100]})
 
 
 def scatterplot(request):
