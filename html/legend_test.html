@@ -1,0 +1,104 @@
+<body>
+    <div>Correlations</div>
+    <canvas id="cnv" width="1000" height="50"></canvas>
+
+<style>
+    canvas {
+
+
+        display: inline-block;
+    }
+    div {
+        font-weight: bold;
+        font-size: 2em;
+        width: 200px;
+        height: 37px;
+        margin: 0px;
+        display: inline-block;
+    }
+
+</style>
+
+
+<script>
+    var cnv = document.getElementById('cnv');
+
+    // draw legend box //
+
+    var ctx_top = cnv.getContext("2d");
+    ctx_top.beginPath();
+    ctx_top.moveTo(790,13);
+    ctx_top.lineTo(990,13);
+    ctx_top.stroke();
+    
+    var ctx_bottom = cnv.getContext("2d");
+    ctx_bottom.beginPath();
+    ctx_bottom.moveTo(790,39);
+    ctx_bottom.lineTo(990, 39);
+    ctx_bottom.stroke();
+    
+    var ctx_left = cnv.getContext("2d");
+    ctx_left.beginPath();
+    ctx_left.moveTo(790, 13);
+    ctx_left.lineTo(790,39);
+    ctx_left.stroke();
+    
+    var ctx_right = cnv.getContext("2d");
+    ctx_right.beginPath();
+    ctx_right.moveTo(990,13);
+    ctx_right.lineTo(990, 39);
+    ctx_right.stroke();
+    
+    var ctx_quarter = cnv.getContext("2d");
+    ctx_quarter.beginPath();
+    ctx_quarter.moveTo(840, 13);
+    ctx_quarter.lineTo(840, 39);
+    ctx_quarter.stroke();
+    
+    var ctx_middle = cnv.getContext("2d");
+    ctx_middle.beginPath();
+    ctx_middle.moveTo(890,13);
+    ctx_middle.lineTo(890,39);
+    ctx_middle.stroke();
+    
+    var ctx_three_quarters = cnv.getContext("2d");
+    ctx_three_quarters.beginPath();
+    ctx_three_quarters.moveTo(940, 13);
+    ctx_three_quarters.lineTo(940, 39);
+    ctx_three_quarters.stroke();
+
+    
+    // draw numbers for legend
+
+    var ctx_neg_one = cnv.getContext("2d");
+    ctx_neg_one.font = "11px Helvetica";
+    ctx_neg_one.fillText("-1.0", 780, 49);
+
+    var ctx_neg_half = cnv.getContext("2d");
+    ctx_neg_half.font = "11px Helvetica";
+    ctx_neg_half.fillText("-0.5", 830, 49);
+
+    var ctx_zero = cnv.getContext("2d");
+    ctx_zero.font = "11px Helvetica";
+    ctx_zero.fillText("0", 888, 49);
+
+    var ctx_pos_half = cnv.getContext("2d");
+    ctx_pos_half.font = "11px Helvetica";
+    ctx_pos_half.fillText("+0.5", 930, 49);
+
+    var ctx_pos_one = cnv.getContext("2d");
+    ctx_pos_one.font = "11px Helvetica";
+    ctx_pos_one.fillText("+1.0", 975, 49);
+
+    // draw word legend
+
+    var ctx_title = cnv.getContext("2d");
+    ctx_title.font = "11px Helvetica";
+    ctx_title.fillText("Legend", 790, 10);
+
+    
+    
+
+</script>
+</body>
+
