@@ -5,6 +5,7 @@ from capstone.models import CorrelationData
 
 import pandas as pd
 
+def erase():
 
 def get_attribute(variable_name, data_row):
     if variable_name == 'Access 2010':

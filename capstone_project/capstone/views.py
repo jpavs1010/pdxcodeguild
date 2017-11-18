@@ -119,6 +119,7 @@ def find_color(min_value, max_value, value):
 def render_key():
     d = '<div>'  # to do: add key # canvas draw line # interpolate the color # draw vertical lines
     # also update models to be floatfield instead of charfield # create a button to move from page to page
+    # add upper bound and lower bound automatically to scatter plot range
     #d +=
 
     d += '</div>'
