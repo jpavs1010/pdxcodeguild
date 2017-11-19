@@ -32,7 +32,7 @@ class AccessData(models.Model):
 
 
 class MapData(models.Model):
-    variable = models.CharField(max_length=20)
+    variable = models.CharField(max_length=25)
     header_text = models.CharField(max_length=200)
     legend_text = models.CharField(max_length=200)
     lower_bound = models.FloatField()
@@ -45,7 +45,7 @@ class MapData(models.Model):
 class CorrelationData(models.Model):
     variable1 = models.CharField(max_length=20)
     variable2 = models.CharField(max_length=20)
-    correlation = models.FloatField(max_length=5)
+    correlation = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return self.variable1+' '+self.variable2

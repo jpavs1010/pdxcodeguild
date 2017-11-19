@@ -38,7 +38,7 @@ def get_attribute(variable_name, data_row):
         return data_row.convenience_2014
     elif variable_name == 'White 2010':
         return data_row.white_2010
-    elif variable_name == 'Black 2010':
+    elif variable_name == 'African American 2010':
         return data_row.black_2010
     elif variable_name == 'Hispanic 2010':
         return data_row.hispanic_2010

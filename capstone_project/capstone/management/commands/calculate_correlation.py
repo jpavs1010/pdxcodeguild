@@ -5,7 +5,10 @@ from capstone.models import CorrelationData
 
 import pandas as pd
 
+
 def erase():
+    CorrelationData.objects.all().delete()
+
 
 def get_attribute(variable_name, data_row):
     if variable_name == 'Access 2010':
@@ -34,7 +37,7 @@ def get_attribute(variable_name, data_row):
         return data_row.convenience_2014
     elif variable_name == 'White 2010':
         return data_row.white_2010
-    elif variable_name == 'Black 2010':
+    elif variable_name == 'African American 2010':
         return data_row.black_2010
     elif variable_name == 'Hispanic 2010':
         return data_row.hispanic_2010
@@ -55,7 +58,7 @@ def correlate():
     for data_row in AccessData.objects.all():
         for variable_name in data:
             datum = get_attribute(variable_name, data_row)
-            data[variable_name].append(float(datum))
+            data[variable_name].append(datum)
 
     df = pd.DataFrame(data)
     for variable1 in data:
@@ -75,4 +78,5 @@ def correlate():
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
+        erase()
         correlate()
