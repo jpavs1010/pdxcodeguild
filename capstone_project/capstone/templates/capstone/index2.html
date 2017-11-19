@@ -1,13 +1,19 @@
 {% load static %}
 
-<h1 id="page_title"></h1>
+<ul>
+    <li><a class="active" href="{% url 'capstone:index2' %}">Map</a></li>
+    <li><a href="{% url 'capstone:correlation' %}">Correlations</a></li>
+    <li><a href="{% url 'capstone:scatterplot' %}">Scatter Plot</a></li>
+    <select id="ddl_graph">
+        {% for mapdatum in mapdata %}
+        <option value="{{mapdatum.variable}}">{{mapdatum.variable}}</option>
+        {% endfor %}
+    </select>
+    <button id="bt_show_graph">show</button>
+    <li id="page_title"></li>
 
-<select id="ddl_graph">
-    {% for mapdatum in mapdata %}
-    <option value="{{mapdatum.variable}}">{{mapdatum.variable}}</option>
-    {% endfor %}
-</select>
-<button id="bt_show_graph">show</button>
+</ul>
+
 <div id="map"></div>
 <svg width="960" height="600"></svg>
 
@@ -24,6 +30,40 @@
         opacity: 0.75;
         fill: #ffb366;
         stroke: #000
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: lightblue;
+        height: 22px;
+
+}
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: black;
+        text-align: center;
+        padding: 0px 16px;
+        text-decoration: none;
+    }
+
+    li a:hover {
+        background-color: blue;
+        height: 22px;
+        font-weight: bold;
+        color: white;
+    }
+    #page_title {
+        padding: 0px 50px;
+        font-weight: bold;
+        font-size: 20px;
     }
 </style>
 <script src="https://d3js.org/d3.v4.min.js"></script> <!--from d3 website-->

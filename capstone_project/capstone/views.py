@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import AccessData, MapData, CorrelationData
 
@@ -103,13 +103,13 @@ def render_color(c):
 
 def find_color(min_value, max_value, value):
 
-    green = (0, 255, 0)
+    orange = (255, 194, 102)
     blue = (0, 0, 255)
     white = (255, 255, 255)
 
     if value < 0:
         t = find_t(min_value, 0, value)
-        return render_color(interpolate_colors(green, white, t))
+        return render_color(interpolate_colors(orange, white, t))
     else:
         t = find_t(0, max_value, value)
         return render_color(interpolate_colors(white, blue, t))
@@ -199,4 +199,8 @@ def scatterplot(request):
     context = {'mapdata': mapdata}
 
     return render(request, 'capstone/scatterplot.html', context)
+
+
+
+
 
