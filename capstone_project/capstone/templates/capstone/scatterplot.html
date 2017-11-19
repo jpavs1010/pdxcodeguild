@@ -1,5 +1,5 @@
 
-<h1 id="page_title"></h1>
+<h1 id="page_title">Scatter Plot</h1>
 <select id="variable1">
     {% for mapdatum in mapdata %}
     <option value="{{mapdatum.variable}}">{{mapdatum.variable}}</option>
@@ -26,13 +26,20 @@
     .dot {
         stroke: #000;
     }
-    .tooltip {
+    div.tooltip {
         position: absolute;
-        width: 200px;
-        height: 28px;
+        text-align: left;
+        width: 150px;
+        height: 45px;
+        padding: 2px;
+        font: 12px sans-serif;
+        font-weight: bold;
+        background: #ffb366;
+        border: 0px;
+        border-radius: 8px;
         pointer-events: none;
-
     }
+
 
 
 </style>
@@ -50,7 +57,7 @@
         generate_graph(v1, v2);
     };
 
-    generate_graph('Access 2010', 'Diabetes 2008');
+    generate_graph('Black 2010', 'Diabetes 2008');
 
     function generate_graph(variable1, variable2) {
 
@@ -66,16 +73,32 @@
         var xAxis = d3.axisBottom(x).ticks(20);//.tickFormat(function(d){ return d.x;}
         var yAxis = d3.axisLeft(y).ticks(20);
 
-        console.log(xAxis);
+        var div = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
 
         var svg = d3.select('svg')//d3.select("body").append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-        var tooltip = d3.select("body").append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
+
+//        var tip = d3.select('body')
+//            .append('div')
+//            .attr('class', 'tip')
+//            .html('I am a tooltip...')
+//            .style('border', '1px solid steelblue')
+//            .style('padding', '5px')
+//            .style('position', 'absolute')
+//            .style('display', 'none')
+//            .on('mouseover', function(d, i) {
+//            tip.transition().duration(0);
+//            })
+//            .on('mouseout', function(d, i) {
+//            tip.style('display', 'none');
+//            });
+
 
         d3.json("{% url 'capstone:scatterplot_data' %}?v1=" + variable1 + "&v2=" + variable2,
             function (error, data) {
@@ -104,16 +127,44 @@
                     .data(data)
                     .enter().append("circle")
                     .attr("class", "dot")
-                    .attr("r", 3.5)
+
                     .attr("cx", function (d) {
                         return x(d.choice1);
                     })
                     .attr("cy", function (d) {
                         return y(d.choice2);
                     })
+                    .attr("r", 3.5)
+                    .on("mouseover", function(d) {
+                    div.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                    div	.html(d.county + ', '  + d.state + '<br/>' + variable1 +': ' + d.choice1.toFixed(2) + '%' + '<br/>' + variable2 + ': ' + d.choice2+ '%')
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
+                    })
+                    .on("mouseout", function(d) {
+                    div.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+                    })
                     .style("fill", function (d) {
-                        return 'blue';
-                    });
+                            return '#0000ff';
+
+                        });
+//                    .style("opacity", 0.6)
+//                    .on('mouseover', function(d, i) {
+//                    tip.transition().duration(0);
+//                    tip.style('top', y(d.y) - 20 + 'px');
+//                    tip.style('left', x(d.x) + 'px');
+//                    tip.style('display', 'block');
+//                    })
+//                    .on('mouseout', function(d, i) {
+//                    tip.transition()
+//                    .delay(500)
+//                    .style('display', 'none');
+//                    })
+
 
 
 
@@ -128,7 +179,7 @@
                     .attr("x", width)
                     .attr("y", -6)
                     .style("text-anchor", "end")
-                    .text(variable1); //variable 1
+                    .text(variable1);
 
                 // draw y axis
                 svg.append("g")

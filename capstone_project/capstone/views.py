@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.db import connection
 from django.http import JsonResponse
 from .models import AccessData, MapData, CorrelationData
 
@@ -117,14 +116,10 @@ def find_color(min_value, max_value, value):
 
 
 def render_key():
-    d = '<div>'  # to do: add key # canvas draw line # interpolate the color # draw vertical lines
-    # also update models to be floatfield instead of charfield # create a button to move from page to page
-    # add upper bound and lower bound automatically to scatter plot range
-    #d +=
-
-    d += '</div>'
-
-    return d
+    c = '<canvas>'
+    # c += not sure how to draw boxes in canvas here and interpolate colors
+    c += '</canvas>'
+    return c
 
 
 def render_correlation_matrix():
@@ -196,7 +191,7 @@ def scatterplot_data(request):
         if data_row['choice1'] is not None and data_row['choice2'] is not None and data_row['choice1'] != 'nan' and data_row['choice2'] != 'nan':
             json_data_set.append(data_row)
 
-    return JsonResponse({'all_data': json_data_set[:100]})
+    return JsonResponse({'all_data': json_data_set})
 
 
 def scatterplot(request):
