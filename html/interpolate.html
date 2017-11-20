@@ -1,0 +1,74 @@
+
+<body>
+    <ul>
+      <li><a class="active" href="#Map">Map</a></li>
+        <!--use "{%url....%}" in django...-->
+      <li><a href="#Scatterplot">Scatter Plot</a></li>
+      <li><a href="#Correlations">Correlations</a></li>
+    </ul>
+    <div>Correlations</div>
+    <canvas id="cnv" width="200" height="25"></canvas>
+
+<style>
+
+    div {
+        font-weight: bold;
+        font-size: 2em;
+        width: 200px;
+        height: 37px;
+        margin: 0px;
+        display: inline-block;
+    }
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: gray;
+}
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    li a:hover {
+        background-color: lightgray;
+    }
+
+</style>
+
+
+<script>
+function interpolate(v1, v2, t) {
+    return (1.0-t)*v1 + t*v2;
+}
+function interpolate_color(color1, color2, t) {
+    return [interpolate(color1[0], color2[0], t),
+        interpolate(color1[1], color2[1], t),
+        interpolate(color1[2], color2[2], t)]
+}
+
+//let cnv = document.querySelector('#cnv');
+let ctx = cnv.getContext('2d');
+let color1 = [0, 0, 255];
+let color2 = [255, 255, 255];
+for (let i=0; i<(cnv.width); ++i) {
+    let t = i/((cnv.width)-1);
+    let c = interpolate_color(color1, color2, t);
+    ctx.strokeStyle = `rgb(${Math.floor(c[0])}, ${Math.floor(c[1])}, ${Math.floor(c[2])})`;
+    ctx.beginPath();
+    ctx.moveTo(i, 0);
+    ctx.lineTo(i, cnv.height);
+    ctx.stroke();
+}
+
+</script>
+</body>
