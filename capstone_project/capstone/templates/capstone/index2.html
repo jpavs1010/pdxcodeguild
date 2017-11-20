@@ -5,6 +5,7 @@
     <li><a href="{% url 'capstone:correlation' %}">Correlations</a></li>
     <li><a href="{% url 'capstone:scatterplot' %}">Scatter Plot</a></li>
     <select id="ddl_graph">
+        <option value ="">Select Variable</option>
         {% for mapdatum in mapdata %}
         <option value="{{mapdatum.variable}}">{{mapdatum.variable}}</option>
         {% endfor %}

@@ -3,6 +3,7 @@
         <li><a class="active" href="{% url 'capstone:index2' %}">Map</a></li>
         <li><a href="{% url 'capstone:correlation' %}">Correlations</a></li>
         <li><a href="{% url 'capstone:scatterplot' %}">Scatter Plot</a></li>
+        <li id="page_title">Correlation Matrix</li>
 
     </ul>
     <!--<div>Correlations</div>-->
@@ -73,6 +74,11 @@
         height: 22px;
         font-weight: bold;
         color: white;
+    }
+     #page_title {
+        padding: 0px 300px;
+        font-weight: bold;
+        font-size: 20px;
     }
 
 </style>

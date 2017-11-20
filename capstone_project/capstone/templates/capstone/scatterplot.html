@@ -2,12 +2,15 @@
     <li><a class="active" href="{% url 'capstone:index2' %}">Map</a></li>
     <li><a href="{% url 'capstone:correlation' %}">Correlations</a></li>
     <li><a href="{% url 'capstone:scatterplot' %}">Scatter Plot</a></li>
+    <li id="page_title"></li>
     <select id="variable1">
+        <option value="">Select Variable 1</option>
         {% for mapdatum in mapdata %}
         <option value="{{mapdatum.variable}}">{{mapdatum.variable}}</option>
         {% endfor %}
     </select>
     <select id="variable2">
+        <option value="">Select Variable 2</option>
         {% for mapdatum in mapdata %}
         <option value="{{mapdatum.variable}}">{{mapdatum.variable}}</option>
         {% endfor %}
@@ -71,9 +74,10 @@
         font-weight: bold;
         color: white;
     }
-    #variable1 #variable2 {
-        padding: 0px 300px;
-
+    #page_title {
+        padding: 0px 50px;
+        font-weight: bold;
+        font-size: 20px;
     }
 </style>
 
@@ -81,16 +85,27 @@
 
 <script>
 
+    function on_load() {
+        var title = document.getElementById('page_title').innerHTML = 'Scatter Plot: African American 2010 and Diabetes 2008';
+        generate_graph('African American 2010', 'Diabetes 2008');
+    }
+
+    on_load()
+
+
     var scatterplot = document.getElementById('scatterplot');
     scatterplot.onclick = function () {
         var variable1_ddl = document.getElementById('variable1');
         var variable2_ddl = document.getElementById('variable2');
         var v1 = variable1.options[variable1.selectedIndex].value;
         var v2 = variable2.options[variable2.selectedIndex].value;
+        var title = document.getElementById('page_title').innerHTML = 'Scatter Plot: ' + v1 + ' and ' + v2;
         generate_graph(v1, v2);
     };
 
-    //generate_graph('Black 2010', 'Diabetes 2008');
+
+
+
 
     function generate_graph(variable1, variable2) {
 
