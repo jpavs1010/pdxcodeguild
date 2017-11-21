@@ -34,7 +34,6 @@
         <!--</tr>-->
         <!--{% endfor %}-->
     <!--</table>-->
-    {{ canvas | safe }}
     {{ table | safe }}
 </body>
 
@@ -84,14 +83,6 @@
 </style>
 
 <script>
-
-//    for (var i = 0; i < array.length; i++) {
-//        var option = document.createElement("option");
-//        option.value = array[i];
-//        option.text = array[i];
-//        selectList.appendChild(option);
-//    }
-
 
     function http_get(url, success) {
         var xhttp = new XMLHttpRequest();

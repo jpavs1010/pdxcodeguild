@@ -36,7 +36,7 @@
     div.tooltip {
         position: absolute;
         text-align: left;
-        width: 150px;
+        width: 190px;
         height: 45px;
         padding: 2px;
         font: 12px sans-serif;
@@ -86,8 +86,8 @@
 <script>
 
     function on_load() {
-        var title = document.getElementById('page_title').innerHTML = 'Scatter Plot: African American 2010 and Diabetes 2008';
-        generate_graph('African American 2010', 'Diabetes 2008');
+        var title = document.getElementById('page_title').innerHTML = 'Scatter Plot: Obese 2008 and Diabetes 2008';
+        generate_graph('Obese 2008', 'Diabetes 2008');
     }
 
     on_load()
@@ -132,21 +132,6 @@
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-//        var tip = d3.select('body')
-//            .append('div')
-//            .attr('class', 'tip')
-//            .html('I am a tooltip...')
-//            .style('border', '1px solid steelblue')
-//            .style('padding', '5px')
-//            .style('position', 'absolute')
-//            .style('display', 'none')
-//            .on('mouseover', function(d, i) {
-//            tip.transition().duration(0);
-//            })
-//            .on('mouseout', function(d, i) {
-//            tip.style('display', 'none');
-//            });
-
 
         d3.json("{% url 'capstone:scatterplot_data' %}?v1=" + variable1 + "&v2=" + variable2,
             function (error, data) {
@@ -170,7 +155,7 @@
                     return d.choice2;
                 })).nice();
 
-                // draws the data points
+                // draws the data points-------------------------------------------
                 svg.selectAll(".dot")
                     .data(data)
                     .enter().append("circle")
@@ -187,7 +172,7 @@
                     div.transition()
                     .duration(200)
                     .style("opacity", .9);
-                    div	.html(d.county + ', '  + d.state + '<br/>' + variable1 +': ' + d.choice1.toFixed(2) + '%' + '<br/>' + variable2 + ': ' + d.choice2+ '%')
+                    div	.html(d.county + ', '  + d.state + '<br/>' + variable1 +': ' + d.choice1.toFixed(2) + '%' + '<br/>' + variable2 + ': ' + d.choice2.toFixed(2)+ '%')
                     .style("left", (d3.event.pageX) + "px")
                     .style("top", (d3.event.pageY - 28) + "px");
                     })
@@ -200,21 +185,6 @@
                             return '#0000ff';
 
                         });
-//                    .style("opacity", 0.6)
-//                    .on('mouseover', function(d, i) {
-//                    tip.transition().duration(0);
-//                    tip.style('top', y(d.y) - 20 + 'px');
-//                    tip.style('left', x(d.x) + 'px');
-//                    tip.style('display', 'block');
-//                    })
-//                    .on('mouseout', function(d, i) {
-//                    tip.transition()
-//                    .delay(500)
-//                    .style('display', 'none');
-//                    })
-
-
-
 
                 // ---------------------------------------------------------------------
                 // draw x axis
@@ -240,36 +210,11 @@
                     .attr("dy", ".71em")
                     .style("text-anchor", "end")
                     .text(variable2);
-
+//________________________________________remove fill: none on axis_____________________________________
                 var es = document.querySelectorAll('.axis');
                 for (var i=0; i<es.length; ++i) {
                     es[i].removeAttribute('fill');
                 }
-
-                // -----------------------------------------------------------
-                // draw legend
-//                var legend = svg.selectAll(".legend")
-//                    .data(color.domain())
-//                    .enter().append("g")
-//                    .attr("class", "legend")
-//                    .attr("transform", function (d, i) {
-//                        return "translate(0," + i * 20 + ")";
-//                    });
-//
-//                legend.append("rect")
-//                    .attr("x", width - 18)
-//                    .attr("width", 18)
-//                    .attr("height", 18)
-//                    .style("fill", color);
-//
-//                legend.append("text")
-//                    .attr("x", width - 24)
-//                    .attr("y", 9)
-//                    .attr("dy", ".35em")
-//                    .style("text-anchor", "end")
-//                    .text(function (d) {
-//                        return d;
-//                    });
 
             });
 

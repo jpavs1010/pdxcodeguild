@@ -115,13 +115,6 @@ def find_color(min_value, max_value, value):
         return render_color(interpolate_colors(white, blue, t))
 
 
-def render_key():
-    c = '<canvas>'
-    # c += not sure how to draw boxes in canvas here and interpolate colors
-    c += '</canvas>'
-    return c
-
-
 def render_correlation_matrix():
     mapdata = MapData.objects.all()
     variables = [md.variable for md in mapdata]
